@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admissions Decision</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      background: #f6f6f4;
+      color: #2d2d2d;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .topbar {
+      background: #ffffff;
+      padding: 20px 40px 10px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .top-links {
+      display: flex;
+      justify-content: flex-end;
+      gap: 20px;
+      font-size: 14px;
+      margin-bottom: 18px;
+    }
+
+    .top-links a {
+      color: #666;
+      text-decoration: underline;
+    }
+
+    .status-btn {
+      background: #b31b1b;
+      color: white;
+      border: none;
+      padding: 12px 22px;
+      font-size: 14px;
+      letter-spacing: 0.3px;
+      cursor: default;
+    }
+
+    .hero {
+      padding: 40px;
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 50px;
+      align-items: start;
+    }
+
+    .site-title {
+      font-size: 28px;
+      font-weight: 300;
+      margin-bottom: 28px;
+    }
+
+    .line {
+      height: 2px;
+      background: #b31b1b;
+      opacity: 0.75;
+      margin: 16px 0 34px;
+    }
+
+    .status-card {
+      background: #ececb8;
+      padding: 28px;
+      max-width: 760px;
+      min-height: 180px;
+    }
+
+    .status-card h2 {
+      margin: 0 0 18px;
+      color: #b31b1b;
+      font-size: 24px;
+    }
+
+    .status-card p {
+      margin: 0 0 22px;
+      font-size: 18px;
+      line-height: 1.6;
+      color: #555;
+    }
+
+    .view-update-btn {
+      background: none;
+      border: none;
+      color: #b31b1b;
+      font-size: 22px;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .small-links {
+      margin-top: 26px;
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      font-size: 14px;
+    }
+
+    .small-links a {
+      color: #2244cc;
+    }
+
+    .sidebar {
+      padding-top: 70px;
+      font-size: 17px;
+      line-height: 1.9;
+      color: #666;
+    }
+
+    .sidebar h3 {
+      color: #b31b1b;
+      margin-top: 26px;
+      margin-bottom: 10px;
+      font-size: 18px;
+    }
+
+    .address-block {
+      margin-top: 18px;
+      line-height: 1.8;
+    }
+
+    .verify-link {
+      display: inline-block;
+      margin-top: 12px;
+      color: #2244cc;
+    }
+
+    /* Letter view */
+    .letter-page {
+      position: relative;
+      min-height: 100vh;
+      padding: 40px 50px 80px;
+      background: #f6f6f4;
+      overflow: hidden;
+    }
+
+    .letter-header {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      column-gap: 30px;
+      margin-bottom: 50px;
+    }
+
+    .letter-header .title {
+      font-size: 28px;
+      font-weight: 300;
+    }
+
+    .seal {
+      width: 120px;
+      height: 120px;
+      border: 4px solid #b31b1b;
+      border-radius: 50%;
+      color: #b31b1b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      text-align: center;
+      font-size: 14px;
+      padding: 12px;
+      background: transparent;
+    }
+
+    .header-line {
+      height: 2px;
+      background: #b31b1b;
+      opacity: 0.75;
+    }
+
+    .letter-content {
+      max-width: 1050px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    .letter-top {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 60px;
+      margin-bottom: 50px;
+    }
+
+    .date {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 36px;
+      font-family: Georgia, "Times New Roman", serif;
+    }
+
+    .office-name {
+      color: #b31b1b;
+      font-size: 34px;
+      font-family: Georgia, "Times New Roman", serif;
+      margin-bottom: 6px;
+    }
+
+    .office-subtitle {
+      font-size: 22px;
+      font-weight: 700;
+      font-family: Georgia, "Times New Roman", serif;
+    }
+
+    .sender-box {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 18px;
+      line-height: 1.6;
+      padding-top: 52px;
+    }
+
+    .letter-body {
+      max-width: 980px;
+      font-size: 19px;
+      line-height: 1.9;
+      color: #444;
+    }
+
+    .letter-body p {
+      margin-bottom: 24px;
+    }
+
+    .back-btn {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background: white;
+      border: 1px solid #ccc;
+      padding: 10px 16px;
+      cursor: pointer;
+      z-index: 5;
+      font-size: 14px;
+    }
+
+    /* confetti */
+    .confetti {
+      position: fixed;
+      top: -20px;
+      width: 10px;
+      height: 18px;
+      background: #b31b1b;
+      opacity: 0.9;
+      animation: fall linear forwards;
+      z-index: 1;
+      border-radius: 2px;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(110vh) rotate(720deg);
+      }
+    }
+
+    @media (max-width: 950px) {
+      .hero,
+      .letter-top,
+      .letter-header {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        padding-top: 10px;
+      }
+
+      .seal {
+        margin: 0 auto;
+      }
+
+      .letter-header .title {
+        text-align: center;
+      }
+
+      .header-line {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Portal Page -->
+  <section id="portalPage">
+    <div class="topbar">
+      <div class="top-links">
+        <button class="status-btn">CHECK APPLICATION STATUS</button>
+        <a href="#">Policies</a>
+        <a href="#">Request Information</a>
+        <a href="#">Contact Us</a>
+      </div>
+    </div>
+
+    <div class="hero">
+      <div>
+        <div class="site-title">College Undergraduate Admissions</div>
+        <div class="line"></div>
+
+        <div class="status-card">
+          <h2>Status Update</h2>
+          <p>New updates to your application were posted March 12, 2026.</p>
+          <button class="view-update-btn" onclick="showLetter()">View Update >></button>
+        </div>
+
+        <div class="small-links">
+          <a href="#">Change Email Address</a>
+          <a href="#">Change Password</a>
+          <a href="#">Logout</a>
+        </div>
+      </div>
+
+      <div class="sidebar">
+        <p>If you need to contact us regarding your application, provide your name and this reference number: 175614932.</p>
+
+        </p>
+
+        <h3>Verify Address</h3>
+        <p>Please confirm your current address to ensure proper communication regarding your application.</p>
+
+        <div class="address-block">
+          <strong>Current Address on File:</strong><br />
+          Sia Bora<br />
+          Up ur butt<br />
+          Bangalore, India
+        </div>
+
+        <a class="verify-link" href="#">Verify Now</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Letter Page -->
+  <section id="letterPage" class="letter-page hidden">
+    <button class="back-btn" onclick="goBack()">← Back</button>
+
+    <div class="letter-content">
+      <div class="letter-header">
+        <div>
+          <div class="title">College Undergraduate Admissions</div>
+          <div class="header-line"></div>
+        </div>
+
+        <div class="seal">UNIVERSITY<br>SEAL</div>
+
+        <div>
+          <div class="header-line"></div>
+        </div>
+      </div>
+
+      <div class="letter-top">
+        <div>
+          <div class="date">March 12, 2026</div>
+          <div class="office-name">17 Years Committee</div>
+          <div class="office-subtitle">Office of Admissions</div>
+        </div>
+
+        <div class="sender-box">
+          <strong>Anya and Sana Garg</strong><br />
+          <em>Directors of Admissions</em><br />
+          17 Years Committee<br /><br />
+          Office of Admissions<br />
+          17 Years Committee<br />
+        </div>
+      </div>
+
+      <div class="letter-body">
+        <p>Dear Sia Bora,</p>
+
+        <p>
+          Congratulations! We are delighted to share that the admissions selection committee has approved your application for admission to your 17th year 2026.
+        </p>
+
+        <p>
+          Your application stood out for its thoughtfulness, achievement, and clear sense of purpose. We are excited by the perspectives, energy, and ambition you would bring to our campus community.
+        </p>
+
+        <p>
+          We hope you will take time to celebrate this accomplishment. We present you with some personal messages from the deans:
+        </p>
+
+        <p>
+          From our distinguished dean Sana Garg: "happy birthday siaaaaa! ur so old i cant believe ur almost in uniiii i hope 17 is gonna be ur best and i cant wait to see u. i miss u so much and i swear we’re coming to visit soon bc it’s been too long and we gotta update :)) i know all ur secrets 😊 so don’t lie don’t lie. love uuuu see u soon"
+        </p>
+
+        <p>
+          From our respected dean Anya Garg: "CONGRATS SIAAAAA I LOVE YOUUU! I'm so proud of u, and im so glad ur turning 17 :) I know you r going to do amazing things this year, and I'm so grateful i'll be able to seee it. I miss u tons, i havent seen you in ages and i really really want to. promise we'll hang out this year? happy bday :))"
+        </p>
+
+        <p>
+          Congratulations once again on this wonderful achievement. We hope to welcome you to campus soon.
+        </p>
+
+        <p>Sincerely,<br /><br />Director Name<br />Director of Undergraduate Admissions</p>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    function showLetter() {
+      document.getElementById("portalPage").classList.add("hidden");
+      document.getElementById("letterPage").classList.remove("hidden");
+      launchConfetti();
+    }
+
+    function goBack() {
+      document.getElementById("letterPage").classList.add("hidden");
+      document.getElementById("portalPage").classList.remove("hidden");
+      document.querySelectorAll(".confetti").forEach(c => c.remove());
+    }
+
+    function launchConfetti() {
+      for (let i = 0; i < 70; i++) {
+        const piece = document.createElement("div");
+        piece.classList.add("confetti");
+        piece.style.left = Math.random() * 100 + "vw";
+        piece.style.animationDuration = (4 + Math.random() * 4) + "s";
+        piece.style.transform = `rotate(${Math.random() * 360}deg)`;
+        document.body.appendChild(piece);
+
+        setTimeout(() => {
+          piece.remove();
+        }, 8500);
+      }
+    }
+  </script>
+</body>
+</html>
